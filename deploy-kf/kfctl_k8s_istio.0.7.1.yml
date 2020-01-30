@@ -293,7 +293,7 @@ spec:
     name: seldon-core-operator
   repos:
   - name: manifests
-    uri: file:/home/svangara/kubetest/uris/v0.7-branch.tar.gz
+    uri: file:${KFAPP}/uri/v0.7-branch.tar.gz
   version: v0.7.1
 status:
   reposCache:
