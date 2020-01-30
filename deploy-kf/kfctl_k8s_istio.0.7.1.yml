@@ -297,5 +297,5 @@ spec:
   version: v0.7.1
 status:
   reposCache:
-  - localPath: '"/home/svangara/kubetest/uris/.cache/manifests/manifests-0.7-branch"'
+  - localPath: '"${KFAPP}/uris/.cache/manifests/manifests-0.7-branch"'
     name: manifests
