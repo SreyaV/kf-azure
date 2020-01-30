@@ -295,7 +295,3 @@ spec:
   - name: manifests
     uri: file:${KFAPP}/uri/v0.7-branch.tar.gz
   version: v0.7.1
-status:
-  reposCache:
-  - localPath: '"${KFAPP}/uris/.cache/manifests/manifests-0.7-branch"'
-    name: manifests

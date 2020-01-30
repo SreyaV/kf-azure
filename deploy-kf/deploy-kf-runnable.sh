@@ -53,14 +53,12 @@ read $EXIST
 
 if [$EXIST = "N"]
 then 
-    echo Where should this cluster be?
+    echo Where should this cluster be? ex. eastus2
     read $LOCATION
     az aks create -g $RESOURCE_GROUP_NAME -n $NAME -s Standard_DS13_v2 -c 2 -l $LOCATION --generate-ssh-keys
 
 # Create a cluster on your desired resource group, skip if already existing
 #az aks create -g <RESOURCE_GROUP_NAME> -n <NAME> -s <AGENT_SIZE> -c <AGENT_COUNT> -l <LOCATION> --generate-ssh-keys
-
-az aks create -g $RESOURCE_GROUP_NAME -n $NAME -s Standard_DS13_v2 -c 2 -l eastus2 --generate-ssh-keys
 
 # Get credentials for cluster
 az aks get-credentials -n $NAME -g $RESOURCE_GROUP_NAME
@@ -111,11 +109,12 @@ mkdir uri
 cd uri
 
 # Download config dependencies to folder
-wget "https://raw.githubusercontent.com/kubeflow/manifests/v0.7-branch/kfdef/kfctl_k8s_istio.0.7.1.yaml"
+#wget "https://raw.githubusercontent.com/kubeflow/manifests/v0.7-branch/kfdef/kfctl_k8s_istio.0.7.1.yaml"
+wget "https://raw.githubusercontent.com/SreyaV/kf-azure/master/deploy-kf/kfctl_k8s_istio.0.7.1.yml"
 wget "https://github.com/kubeflow/manifests/archive/v0.7-branch.tar.gz"
 
-# Edit config .yaml to download repo from local filesystem
-vim kfctl_k8s_istio.0.7.1.yaml
+# Edit config .yaml to download repo from local filesystem --> no need to do if you use the SreyaV .yml URI
+#vim kfctl_k8s_istio.0.7.1.yaml
 # Edit line 300 to the following:
 # uri: file:${KFAPP}/uri/v0.7-branch.tar.gz
 # Notes: press 'i' to insert, 'esc' to escape insertion mode, ':q!' to exit without saving, ':wq' to save and exit
@@ -130,12 +129,15 @@ kfctl apply -V -f ${CONFIG_URI}
 kubectl get all -n kubeflow
 
 # Change ingress gateway to view Kubernates Dashboard over external IP
-kubectl edit -n istio-system svc/istio-ingressgateway
+#kubectl edit -n istio-system svc/istio-ingressgateway
 # Change line 78, type to 'LoadBalancer'
+
+#This line auto changes without the need of vim
+kubectl -n istio-system get svc/istio-ingressgateway -o yaml | sed "s/type: NodePort/type: LoadBalancer/g" | kubectl replace -f -
+
+echo Visit http://[external ip] to see dashboard
 
 # Get external IP for dashboard
 kubectl get -w -n istio-system svc/istio-ingressgateway
 
 # Visit http://[external ip] to see dashboard
-
-
