@@ -27,7 +27,7 @@ sudo yum install docker-engine -y
 # Login
 
 echo Please enter the Application ID
-read $APP_ID
+read -n 1 -p $APP_ID
 
 echo Please enter the Application Password
 read $PASSWORD
