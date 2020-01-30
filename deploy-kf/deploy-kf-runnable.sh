@@ -1,4 +1,12 @@
 
+echo Please enter the Application ID
+read -n 1 -p $APP_ID
+
+echo Please enter the Application Password
+read $PASSWORD
+
+echo Please enter the Tenant ID
+read $TENANT_ID
 
 # Install kubectl
 curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
@@ -25,15 +33,6 @@ sudo yum install docker-engine -y
 # Azure side requirements: get the cluster set up and attached
 
 # Login
-
-echo Please enter the Application ID
-read -n 1 -p $APP_ID
-
-echo Please enter the Application Password
-read $PASSWORD
-
-echo Please enter the Tenant ID
-read $TENANT_ID
 
 az login --service-principal --username $APP_ID --password $PASSWORD --tenant $TENANT_ID
 
