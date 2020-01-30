@@ -1,8 +1,8 @@
 #!/bin/bash
 
 exec < /dev/tty
-echo Please enter the Application ID
-read -n 1 -p $APP_ID
+echo Please enter the Application ID -n
+read $APP_ID
 
 echo Please enter the Application Password
 read $PASSWORD
