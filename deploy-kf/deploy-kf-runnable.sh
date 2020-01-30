@@ -1,10 +1,13 @@
 #!/bin/bash
 
 exec < /dev/tty
-echo Please enter the Application ID -n
+
+read $TEMP
+
+echo -n Please enter the Application ID
 read $APP_ID
 
-echo Please enter the Application Password
+echo -n Please enter the Application Password
 read $PASSWORD
 
 echo Please enter the Tenant ID
