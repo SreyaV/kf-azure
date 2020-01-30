@@ -1,7 +1,8 @@
 #!/bin/bash
-# Shell Script to install and build kfctl
+# Bash Script Guide to install and build kfctl
 # Sreya Vangara, Jan 2020
 # Final Result: Use kfctl to deploy Kubeflow on Azure
+# Prerequisites: Kubectl, Docker, Existing Azure Account
 
 # Clone the kfctl source code from GitHub. 
 git clone https://github.com/kubeflow/kfctl.git

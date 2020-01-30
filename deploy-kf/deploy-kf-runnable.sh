@@ -1,22 +1,19 @@
 #!/bin/bash
+# Runnable Bash Script to install and build kfctl
+# Sreya Vangara, Jan 2020
+# Final Result: Use kfctl to deploy Kubeflow on Azure
+# Prerequisites: Existing Resource Group 
 
-exec < /dev/tty
+# Collect Azure authentication arguments
+echo -n 'Please enter the Application ID '
+read APP_ID
 
-read $TEMP
+echo -n 'Please enter the Application Password '
+read -s PASSWORD
+echo
 
-echo -n Please enter the Application ID
-read $APP_ID
-
-echo -n Please enter the Application Password
-read $PASSWORD
-
-echo Please enter the Tenant ID
-read $TENANT_ID
-
-#$APP_ID = 'bc6175f0-8591-4491-9254-7ff163901a21'
-#$PASSWORD= '?mGP@E1hGhU@aNty3=G3e53F:L.gMOVf'
-#$TENANT_ID ='72f988bf-86f1-41af-91ab-2d7cd011db47'
-
+echo -n 'Please enter the Tenant ID '
+read TENANT_ID
 
 # Install kubectl
 curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
@@ -38,6 +35,7 @@ curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
 # Install Docker
 
+sudo apt-get install yum -y
 sudo yum install docker-engine -y
 
 # Azure side requirements: get the cluster set up and attached
@@ -46,28 +44,22 @@ sudo yum install docker-engine -y
 
 az login --service-principal --username $APP_ID --password $PASSWORD --tenant $TENANT_ID
 
-#az login
+echo -n 'Please enter the Resource Group Name '
+read RESOURCE_GROUP_NAME
 
-# Create a resource group, skip if already existing
-#az group create -n <RESOURCE_GROUP_NAME> -l <LOCATION>
+echo -n 'Please enter the name of your cluster '
+read NAME
 
-echo Please enter the Resource Group Name
-read $RESOURCE_GROUP_NAME
-
-echo Please enter the name of your cluster
-read $NAME
-
-echo Does this cluster already exist? Y/N
-read $EXIST
-
-if [$EXIST = "N"]
-then 
-    echo Where should this cluster be? ex. eastus2
-    read $LOCATION
-    az aks create -g $RESOURCE_GROUP_NAME -n $NAME -s Standard_DS13_v2 -c 2 -l $LOCATION --generate-ssh-keys
+echo -n 'Does this cluster already exist? Y/N '
+read EXIST
 
 # Create a cluster on your desired resource group, skip if already existing
-#az aks create -g <RESOURCE_GROUP_NAME> -n <NAME> -s <AGENT_SIZE> -c <AGENT_COUNT> -l <LOCATION> --generate-ssh-keys
+if [$EXIST = "N"]
+then 
+    echo 'Where should this cluster be located? ex. eastus2 '
+    read LOCATION
+    az aks create -g $RESOURCE_GROUP_NAME -n $NAME -s Standard_DS13_v2 -c 2 -l $LOCATION --generate-ssh-keys
+fi
 
 # Get credentials for cluster
 az aks get-credentials -n $NAME -g $RESOURCE_GROUP_NAME
@@ -118,15 +110,8 @@ mkdir uri
 cd uri
 
 # Download config dependencies to folder
-#wget "https://raw.githubusercontent.com/kubeflow/manifests/v0.7-branch/kfdef/kfctl_k8s_istio.0.7.1.yaml"
 wget "https://raw.githubusercontent.com/SreyaV/kf-azure/master/deploy-kf/kfctl_k8s_istio.0.7.1.yml"
 wget "https://github.com/kubeflow/manifests/archive/v0.7-branch.tar.gz"
-
-# Edit config .yaml to download repo from local filesystem --> no need to do if you use the SreyaV .yml URI
-#vim kfctl_k8s_istio.0.7.1.yaml
-# Edit line 300 to the following:
-# uri: file:${KFAPP}/uri/v0.7-branch.tar.gz
-# Notes: press 'i' to insert, 'esc' to escape insertion mode, ':q!' to exit without saving, ':wq' to save and exit
 
 # Point the config env var to the local file
 export CONFIG_URI="${KFAPP}/uris/kfctl_k8s_istio.0.7.1.yaml"
@@ -144,9 +129,11 @@ kubectl get all -n kubeflow
 #This line auto changes without the need of vim
 kubectl -n istio-system get svc/istio-ingressgateway -o yaml | sed "s/type: NodePort/type: LoadBalancer/g" | kubectl replace -f -
 
-echo Visit http://[external ip] to see dashboard
-
 # Get external IP for dashboard
 kubectl get -w -n istio-system svc/istio-ingressgateway
 
 # Visit http://[external ip] to see dashboard
+
+echo '---------------------------------------------------------------------------------------'
+echo 'Visit http://[external ip] to see dashboard'
+echo 'Ctrl-c exit and re-run kubectl get -w -n istio-system svc/istio-ingressgateway if IP is in pending state for extended time'

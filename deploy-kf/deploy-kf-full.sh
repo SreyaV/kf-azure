@@ -1,4 +1,8 @@
-
+#!/bin/bash
+# Bash Script Guide to install and build kfctl
+# Sreya Vangara, Jan 2020
+# Final Result: Use kfctl to deploy Kubeflow on Azure
+# Prerequisites: Existing Azure Account
 
 # Install kubectl
 curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
