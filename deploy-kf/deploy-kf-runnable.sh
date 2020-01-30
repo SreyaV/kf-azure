@@ -1,4 +1,6 @@
+#!/bin/bash
 
+exec < /dev/tty
 echo Please enter the Application ID
 read -n 1 -p $APP_ID
 
@@ -7,6 +9,11 @@ read $PASSWORD
 
 echo Please enter the Tenant ID
 read $TENANT_ID
+
+#$APP_ID = 'bc6175f0-8591-4491-9254-7ff163901a21'
+#$PASSWORD= '?mGP@E1hGhU@aNty3=G3e53F:L.gMOVf'
+#$TENANT_ID ='72f988bf-86f1-41af-91ab-2d7cd011db47'
+
 
 # Install kubectl
 curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
