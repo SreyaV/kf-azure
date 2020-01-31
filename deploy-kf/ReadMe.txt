@@ -18,3 +18,5 @@ kfctl_k8s_istio.0.7.1.yml:
     This is a modified uri for use with deploy-kf-runnable.sh.
 
 Note: These scripts are meant to run on Linux Ubuntu, and were tested on Ubuntu 18.04
+
+Please see 'https://www.kubeflow.org/docs/azure/azureendtoend/#deploy-kubeflow' for the rest of the instructions on creating an Azure pipeline on Kubeflow.
