@@ -11,6 +11,8 @@ The 'privacy' directory contains a model created by the Differential Privacy ext
 
 The 'training' directory contains a sample skLearn model. 
 
+The 'authentication' directory contains training files that prepopulate the environment variables of the Kubeflow cluster with Azure authentication arguments.
+
 The config.json must be filled in with the arguments given by your workspace.
 
 Run 'python pipeline.py' to generate the pipeline.py.tar.gz file used by Kubeflow. 
